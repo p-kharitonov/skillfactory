@@ -3,25 +3,25 @@ def show_field(field):
     print()
     print(*[' ', 0, 1, 2], '', sep=' | ')
     for i,row in enumerate(field):
-        print([0, 1, 2][i],*row, '', sep=' | ')
+        print([0, 1, 2][i], *row, '', sep=' | ')
 
 # Проверка правильности введенных координат
 def verification_input(data_input):
     if len(data_input) != 2:
         return False
     for n in data_input:
-        if n not in ['0','1','2']:
+        if n not in ['0', '1', '2']:
             return False
     return True
 
 # Получение координат хода
-def get_coordinates(chair,grid):
+def get_coordinates(chair,field):
     while True:
         data_input = input(f'Ходят {chair}, ведите номер строки и столбца через пробел: ')
         data_input = data_input.split()
         if verification_input(data_input):
             data_input = list(map(int,data_input))
-            if grid[data_input[0]][data_input[1]] == ' ':
+            if field[data_input[0]][data_input[1]] == ' ':
                 return data_input
             else:
                 print('Эта клетка уже занята!')
@@ -39,18 +39,18 @@ def check_win(field):
 def main():
     name_game = '--- Крестики-нолики ---'
     rules_game = 'Поле 3x3. Для хода каждому игроку предлагается ввести координаты клетки (строка и столбец).'
-    print("-"*len(name_game)+'\n'+name_game+'\n'+"-"*len(name_game)+'\n'+rules_game) # Вывод описания игры
-    chars = [['X','Крестики'], ['0','Нолики']]                         # Символы для игры
+    print('\n'.join(["-"*len(name_game), name_game, "-"*len(name_game), rules_game]))  # Вывод описания игры
+    chars = [['X', 'Крестики'], ['0', 'Нолики']]                         # Символы для игры
     while True:
         field = [[' ' for i in range(3)] for j in range(3)]             # Генерируем пустое поле
         show_field(field)                                               # Выводим пустое поле
         for step in range(9):                                           # 9 ходов
-            player = step%2+1
-            coordinates = get_coordinates(chars[player-1][1], field)    # Получаем координаты хода
-            field[coordinates[0]][coordinates[1]] = chars[player-1][0]  # Заносим ход в поле
+            player = step%2
+            coordinates = get_coordinates(chars[player][1], field)    # Получаем координаты хода
+            field[coordinates[0]][coordinates[1]] = chars[player][0]  # Заносим ход в поле
             show_field(field)                                           # Выводим получившееся поле
             if check_win(field):                                        # Проверяем может кто-то уже выиграл
-                print(f'Победили {chars[player-1][1]}!\n')
+                print(f'Победили {chars[player][1]}!\n')
                 break
         else:                                                           # Если все ходы прошли без выигрыша, то ничья
             print("Ничья!\n")
@@ -63,5 +63,6 @@ def main():
             else:
                 print('Введите либо "да", либо "нет".')
 
-if __name__== "__main__":
+
+if __name__ == "__main__":
     main()
