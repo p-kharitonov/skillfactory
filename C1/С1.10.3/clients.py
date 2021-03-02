@@ -14,9 +14,10 @@ class Client:
         return self.balance
 
 
-db = {'Иван Петров': 50,
-      'Петр Иванов': 10,
-      'Гвидо ван Россум': 'Unknown'}
-clients = [Client(key, value) for key, value in db.items()]
+db = [{'name': 'Иван Петров', 'balance': 50},
+      {'name': 'Петр Иванов', 'balance': 10},
+      {'name': 'Гвидо ван Россум', 'balance': 'Unknown'}]
+
+clients = [Client(item['name'], item['balance']) for item in db]
 for client in clients:
     print(f'Клиент «{client.get_name()}». Баланс: {client.get_balance()} руб.')
