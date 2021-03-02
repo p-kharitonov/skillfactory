@@ -16,7 +16,7 @@ class Client:
 
 class Guest(Client):
     def __init__(self, name, balance, city, status):
-        Client.__init__(self, name, balance)
+        super().__init__(name, balance)
         self.city = city
         self.status = status
 
