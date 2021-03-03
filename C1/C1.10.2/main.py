@@ -17,6 +17,9 @@ class Rectangle:
     def get_height(self):
         return self.height
 
+    def get_square(self):
+        return self.height * self.width
+
 
 figure = Rectangle (5, 10, 50, 100)
-print(f'width: {figure.get_width()}\nheight: {figure.get_height()}')
+print(f'width: {figure.get_width()}\nheight: {figure.get_height()}\nsquare: {figure.get_square()}')
