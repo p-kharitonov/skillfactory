@@ -1,3 +1,5 @@
+import random
+
 class Client:
     def __init__(self, name, balance):
         self.name = name
@@ -20,4 +22,7 @@ db = [{'name': 'Иван Петров', 'balance': 50},
 
 clients = [Client(item['name'], item['balance']) for item in db]
 for client in clients:
+    if isinstance(client.get_balance(), (int, float)):
+        cost = random.randint(-10, 10)
+        client.change_balance(cost)
     print(f'Клиент «{client.get_name()}». Баланс: {client.get_balance()} руб.')
