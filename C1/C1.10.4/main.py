@@ -20,18 +20,14 @@ class Guest(Client):
         self.city = city
         self.status = status
 
-    def get_city(self):
-        return self.city
-
-    def get_status(self):
-        return self.status
+    def __str__(self):
+        return f'«{self.name}, г. {self.city}, статус "{self.status}"»'
 
 
 db = [{'name': 'Иван Петров', 'balance': 50, 'city': 'Москва', 'status': 'Наставник'},
       {'name': 'Петр Иванов', 'balance': 10, 'city': 'Иваново', 'status': 'Студент'},
       {'name': 'Гвидо ван Россум', 'balance': 'Unknown', 'city': 'Белмонт', 'status': 'Случайный гость'}]
 
-clients = [Guest(item['name'], item['balance'], item['city'], item['status']) for item in db]
+clients = [Guest(**item) for item in db]
 for client in clients:
-    print(f'«{client.get_name()}, г. {client.get_city()}, статус "{client.get_status()}"»')
-
+    print(client)
