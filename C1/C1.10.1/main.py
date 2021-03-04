@@ -8,5 +8,6 @@ class Rectangle:
         return f'x: {self.x}\ny: {self.y}\nwidth: {self.width}\nheight: {self.height}'
 
 
-figure = Rectangle (5, 10, 50, 100)
-print(figure)
+if __name__ == '__main__':
+    figure = Rectangle(5, 10, 50, 100)
+    print(figure)

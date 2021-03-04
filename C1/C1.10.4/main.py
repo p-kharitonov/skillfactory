@@ -27,11 +27,12 @@ class Guest(Client):
         return self.status
 
 
-db = [{'name': 'Иван Петров', 'balance': 50, 'city': 'Москва', 'status': 'Наставник'},
-      {'name': 'Петр Иванов', 'balance': 10, 'city': 'Иваново', 'status': 'Студент'},
-      {'name': 'Гвидо ван Россум', 'balance': 'Unknown', 'city': 'Белмонт', 'status': 'Случайный гость'}]
+if __name__ == '__main__':
+    db = [{'name': 'Иван Петров', 'balance': 50, 'city': 'Москва', 'status': 'Наставник'},
+          {'name': 'Петр Иванов', 'balance': 10, 'city': 'Иваново', 'status': 'Студент'},
+          {'name': 'Гвидо ван Россум', 'balance': 'Unknown', 'city': 'Белмонт', 'status': 'Случайный гость'}]
 
-clients = [Guest(item['name'], item['balance'], item['city'], item['status']) for item in db]
-for client in clients:
-    print(f'«{client.get_name()}, г. {client.get_city()}, статус "{client.get_status()}"»')
+    clients = [Guest(item['name'], item['balance'], item['city'], item['status']) for item in db]
+    for client in clients:
+        print(f'«{client.get_name()}, г. {client.get_city()}, статус "{client.get_status()}"»')
 

@@ -21,5 +21,6 @@ class Rectangle:
         return self.height * self.width
 
 
-figure = Rectangle (5, 10, 50, 100)
-print(f'width: {figure.get_width()}\nheight: {figure.get_height()}\nsquare: {figure.get_square()}')
+if __name__ == '__main__':
+    figure = Rectangle (5, 10, 50, 100)
+    print(f'width: {figure.get_width()}\nheight: {figure.get_height()}\nsquare: {figure.get_square()}')

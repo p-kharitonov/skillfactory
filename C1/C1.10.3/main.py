@@ -16,13 +16,14 @@ class Client:
         return self.balance
 
 
-db = [{'name': 'Иван Петров', 'balance': 50},
-      {'name': 'Петр Иванов', 'balance': 10},
-      {'name': 'Гвидо ван Россум', 'balance': 'Unknown'}]
+if __name__ == '__main__':
+    db = [{'name': 'Иван Петров', 'balance': 50},
+          {'name': 'Петр Иванов', 'balance': 10},
+          {'name': 'Гвидо ван Россум', 'balance': 'Unknown'}]
 
-clients = [Client(item['name'], item['balance']) for item in db]
-for client in clients:
-    if isinstance(client.get_balance(), (int, float)):
-        cost = random.randint(-10, 10)
-        client.change_balance(cost)
-    print(f'Клиент «{client.get_name()}». Баланс: {client.get_balance()} руб.')
+    clients = [Client(item['name'], item['balance']) for item in db]
+    for client in clients:
+        if isinstance(client.get_balance(), (int, float)):
+            cost = random.randint(-10, 10)
+            client.change_balance(cost)
+        print(f'Клиент «{client.get_name()}». Баланс: {client.get_balance()} руб.')
