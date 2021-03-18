@@ -1,3 +1,11 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Игра 'Морской бой', в начале пользователю предлагается выбрать размер доски,        #
+# выбрать режим игры (Человек Компьютер, Компьютер/Компьютер) и расположить корабли   #
+# автоматически, далее стандартный сценарий, игроки поочереди пытаются потопить       #
+# все корабли противника.                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
 from random import randint, choice
 
 
@@ -7,7 +15,7 @@ class BoardException(Exception):
 
 class BoardOutException(BoardException):
     def __str__(self):
-        return "Корабль за пределами поля"
+        return 'Корабль за пределами поля'
 
 
 class BoardBusyException(BoardException):
@@ -17,12 +25,12 @@ class BoardBusyException(BoardException):
 
 class BoardUsedException(BoardException):
     def __str__(self):
-        return "Вы уже стреляли в эту клетку"
+        return 'Вы уже стреляли в эту клетку'
 
 
 class BoardWrongCoordException(BoardException):
     def __str__(self):
-        return "Введите 2 координаты в виде одной буквы и одной цифры (например {})!"
+        return 'Введите 2 координаты в виде одной буквы и одной цифры (например {})!'
 
 
 class BoardWrongShipException(BoardException):
@@ -89,12 +97,12 @@ class Board:
 
     def __str__(self):
         axis_x = ['A', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И']
-        result = "\n  | "
+        result = '\n  | '
         result += ' | '.join(axis_x[:self.size]) + ' |'
         for i, row in enumerate(self.field, 1):
-            result += f"\n{i} | " + " | ".join(row) + " |"
+            result += f'\n{i} | ' + ' | '.join(row) + ' |'
         if self.hidden:
-            result = result.replace("o", " ")
+            result = result.replace('o', ' ')
         return result
 
     # Метод добавляет корабль на поле, если добавить невозможно возвращает соответствующее исключение
@@ -135,18 +143,18 @@ class Board:
         for ship in self.ships:
             if dot in ship.dots:
                 ship.lives -= 1
-                self.field[dot.x][dot.y] = "X"
+                self.field[dot.x][dot.y] = 'X'
                 if ship.lives == 0:
                     self.count += 1
                     self.contour(ship, verb=True)
-                    print("Корабль уничтожен!")
+                    print('Корабль уничтожен!')
                     return False
                 else:
-                    print("Корабль ранен!")
+                    print('Корабль ранен!')
                     return True
         else:
             self.field[dot.x][dot.y] = '.'
-            print("Мимо!")
+            print('Мимо!')
             return False
 
     # Метод очищает список занятых клеток
@@ -156,9 +164,13 @@ class Board:
 
 # Родительских класс игроков
 class Player:
-    def __init__(self, own_board, opponent_board):
+    def __init__(self, name, own_board, opponent_board):
+        self.name = name
         self.own_board = own_board
         self.opponent_board = opponent_board
+
+    def __str__(self):
+        return self.name
 
     # Загатовка для получение координат желаемого выстрела
     def ask(self, size):
@@ -180,7 +192,7 @@ class AI(Player):
     # Компьютер возвращает координаты выстрела
     def ask(self, size):
         dot = Dot(randint(0, size-1), randint(0, size-1))
-        print(f"Ход компьютера: {chr(dot.y+1072).upper()}{dot.x+1}")
+        print(f'Ход {self.name}: {chr(dot.y+1072).upper()}{dot.x+1}')
         return dot
 
 
@@ -191,7 +203,7 @@ class User(Player):
         x = 0
         y = 0
         while True:
-            coordinates = input("Ваш ход: ").lower()
+            coordinates = input('Ваш ход: ').lower()
             try:
                 if len(coordinates) != 2:
                     raise BoardWrongCoordException
@@ -261,17 +273,17 @@ class Game:
         board_2 = self.player_2.own_board.field
         axis_x = ['A', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И']
         header = '  | ' + ' | '.join(axis_x[:self.size]) + ' |'
-        result = '\n' + 'Игрок 1'.center(3+4*self.size) + ' '*5 + 'Игрок 2'.center(3+4*self.size) + '\n'
+        result = '\n' + f'{self.player_1}'.center(3+4*self.size) + ' '*5 + f'{self.player_2}'.center(3+4*self.size) + '\n'
         result += header + ' '*5 + header
         for n in range(0, self.size):
-            result += f"\n{n + 1} | " + " | ".join(board_1[n]) + " |"
+            result += f'\n{n + 1} | ' + ' | '.join(board_1[n]) + ' |'
             result += ' ' * 5
-            result += f"{n + 1} | " + " | ".join(board_2[n]).replace("o", " ") + " |"
+            result += f'{n + 1} | ' + ' | '.join(board_2[n]).replace('o', ' ') + ' |'
         print(result)
 
     def settings(self):
         self.select_size()  # Выбираем размер поля
-        self.select_game_mode()  # Выбираем режим "Человек vs Компьютер" или "Компьютер vs Компьютер"
+        self.select_game_mode()  # Выбираем режим 'Человек vs Компьютер' или 'Компьютер vs Компьютер'
         player_2 = self.random_board()
         if self.game_mode == 1:  # Человек vs Компьютер
             self.random = self.is_random()
@@ -279,11 +291,11 @@ class Game:
                 player_1 = self.random_board()
             else:
                 player_1 = self.choice_board()
-            self.player_1 = User(player_1, player_2)
+            self.player_1 = User('Игрок 1', player_1, player_2)
         else:  # Компьютер vs Компьютер
             player_1 = self.random_board()
-            self.player_1 = AI(player_1, player_2)
-        self.player_2 = AI(player_2, player_1)
+            self.player_1 = AI('Игрок 1', player_1, player_2)
+        self.player_2 = AI('Игрок 2', player_2, player_1)
         player_2.hidden = True
 
     @staticmethod
@@ -298,24 +310,22 @@ class Game:
         while True:
             self.show_boards()
             if num % 2 == 0:
-                print("-" * 20)
-                print("Ходит Игрок 1!")
+                print('-' * (11 + 8*self.size))
+                print(f'Ходит {self.player_1}!')
                 repeat = self.player_1.hit(self.size)
             else:
-                print("-" * 20)
-                print("Ходит Игрок 2!")
+                print('-' * (11 + 8*self.size))
+                print(f'Ходит {self.player_2}!')
                 repeat = self.player_2.hit(self.size)
             if repeat:
                 num -= 1
-
             if self.player_2.own_board.count == 7:
-                print("-" * 20)
-                print("Игрок 1 выиграл!")
+                print('-' * (11 + 8*self.size))
+                print(f'{self.player_1} выиграл!')
                 break
-
             if self.player_1.own_board.count == 7:
-                print("-" * 20)
-                print("Игрок 2 выиграл!")
+                print('-' * (11 + 8*self.size))
+                print(f'{self.player_2} выиграл!')
                 break
             num += 1
 
