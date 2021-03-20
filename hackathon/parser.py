@@ -8,12 +8,21 @@ class Article:
     def __init__(self, name, url, publication_time, like, tags):
         self.name = name
         self.url = url
+        self.id = self.get_id(url)
         self.publication_time = publication_time
         self.like = like
         self.tags = tags
 
     def __str__(self):
         return f'{self.name} - {self.publication_time.strftime("%d.%m.%Y %H:%M")}'
+
+    @staticmethod
+    def get_id(url):
+        _id = url.split('/')[-2]
+        if _id.isdigit():
+            return int(_id)
+        else:
+            return 0
 
 
 class Page:
@@ -54,14 +63,14 @@ class Parser:
         db = []
         soup = BeautifulSoup(self.page, 'html.parser')
         _articles = soup.select('ul > li > article.post.post_preview')
-        for article in _articles:
-            name = article.find('h2').text.strip()
-            url = article.find('h2').find('a').get('href')
-            publication_time = article.find('span', class_='post__time').text
+        for _article in _articles:
+            name = _article.find('h2').text.strip()
+            url = _article.find('h2').find('a').get('href')
+            publication_time = _article.find('span', class_='post__time').text
             publication_time = self.get_time(publication_time)
-            like = article.find('span', class_='post-stats__result-counter').text
+            like = _article.find('span', class_='post-stats__result-counter').text
             tags = []
-            hubs = article.select('ul.post__hubs > li')
+            hubs = _article.select('ul.post__hubs > li')
             for hub in hubs:
                 tags.append(hub.find('a').text)
             db.append(Article(name, url, publication_time, like, tags))
@@ -85,4 +94,5 @@ if __name__ == '__main__':
     if page_blog.get_page() is not None:
         parser = Parser(page_blog.response)
         articles = parser.get_articles()
-        print(articles[0])
+        for article in articles:
+            print(article)
