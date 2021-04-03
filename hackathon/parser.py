@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta, date
 
-import requests
+from slack import WebClient
 from bs4 import BeautifulSoup
 import yaml
 
@@ -14,12 +14,51 @@ class Settings:
         _path = 'settings.yaml'
         with open(_path, encoding='utf8') as f:
             _settings = yaml.safe_load(f)
-        _settings['freq'] = _settings['freq'] - 1
         self._settings = _settings
 
     @property
-    def settings(self):
-        return self._settings
+    def status(self):
+        return self._settings['status']
+
+    @property
+    def token(self):
+        return self._settings['token']
+
+    @property
+    def channels(self):
+        return self._settings['channels']
+
+    @property
+    def tags(self):
+        return self._settings['tags']
+
+    @property
+    def freq(self):
+        return self._settings['freq']
+
+    @property
+    def start_date(self):
+        return self._settings['start_date']
+
+    @property
+    def start_time(self):
+        return self._settings['start_time']
+
+    @property
+    def max_article(self):
+        return self._settings['max_article']
+
+    @property
+    def last_article_time(self):
+        return self._settings['last_article_time']
+
+    @property
+    def last_article_id(self):
+        return self._settings['last_article_id']
+
+    @property
+    def text(self):
+        return self._settings['text']
 
 
 class Article:
@@ -47,8 +86,9 @@ class Article:
 
 
 class Page:
-    def __init__(self, url):
+    def __init__(self, url, sheet):
         self.url = url
+        self.sheet = sheet
         self.header = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
         self.response = None
 
@@ -57,7 +97,7 @@ class Page:
 
     def get_page(self):
         try:
-            response = requests.get(self.url, headers=self.header, timeout=5)
+            response = requests.get(self.url+self.sheet, headers=self.header, timeout=5)
             if response.status_code == 200:
                 self.response = response.text
                 return response.text
@@ -82,7 +122,7 @@ class Parser:
 
     def get_articles(self):
         db = []
-        soup = BeautifulSoup(self.page, 'html.parser')
+        soup = BeautifulSoup(self.page, 'lxml')
         _articles = soup.select('ul > li > article.post.post_preview')
         for _article in _articles:
             name = _article.find('h2').text.strip()
@@ -99,11 +139,11 @@ class Parser:
 
     @staticmethod
     def get_time(time):
-        _now = datetime.now()
+        now = datetime.now()
         months = {'января': '1', 'февраля': '2', 'марта': '3', 'апреля': '4',
                   'мая': '5', 'июня': '6', 'июля': '7', 'августа': '8',
                   'сентября': '9', 'октября': '10', 'ноября': '11', 'декабря': '12',
-                  'вчера': f'{_now.day - 1} {_now.month} {_now.year}', 'сегодня': f'{_now.day} {_now.month} {_now.year}'}
+                  'вчера': f'{now.day - 1} {now.month} {now.year}', 'сегодня': f'{now.day} {now.month} {now.year}'}
         for old, new in months.items():
             time = time.lower().replace(old, new)
         time = datetime.strptime(time, "%d %m %Y в %H:%M")
@@ -111,52 +151,66 @@ class Parser:
 
 
 class Slack:
-    def __init__(self, token):
-        self.token = token
-        self.channels = self.get_channels()
+    def __init__(self):
+        self.settings = Settings()
+        self.token = self.settings.token
+        self.all_channels = self.get_channels()
+        self.channels = self.settings.channels
+        self.id_channel = self.get_id_channel(self.channels)
+        self.header_message = self.settings.text
+        self.freq = self.settings.freq
 
     def get_channels(self):
         data = {'token': self.token}
         data_slack = requests.post(url='https://slack.com/api/conversations.list', data=data).json()
         if data_slack['ok']:
-            self.channels = {}
+            self.all_channels = {}
             for channel in data_slack['channels']:
-                self.channels[channel['name']] = channel['id']
-            return self.channels
+                self.all_channels[channel['name']] = channel['id']
+            return self.all_channels
         else:
             return False
 
-    def get_id_my_channel(self, my_channel):
-        if self.channels and my_channel in self.channels:
-            return self.channels[my_channel]
+    def get_id_channel(self, my_channel):
+        if self.all_channels and my_channel in self.all_channels:
+            return self.all_channels[my_channel]
         else:
             return False
 
-    def write_to_channel(self, channel_id, text):
+    def write_to_channel(self):
+        text = ''
+        for n in range(1, 10):
+            page_blog = Page('https://habr.com/ru/company/skillfactory/blog/', f'page{n}')
+            if page_blog.get_page() is not None:
+                parser = Parser(page_blog.response)
+                articles = parser.get_articles()
+                ago = date.today() - timedelta(days=self.freq)
+                ago = datetime(year=ago.year, month=ago.month, day=ago.day)
+                for article in articles:
+                    if article.publication_time > ago:
+                        text += f'• <{article.url}|{article.name}>\n'
+                    else:
+                        break
+                else:
+                    continue
+                break
+        if text:
+            text = self.header_message + '\n' + text
+            return self.request(text)
+        else:
+            return None
+
+    def request(self, message):
         data = {
             'token': self.token,
-            'channel': channel_id,    # User ID.
+            'channel': self.id_channel,    # User ID.
             'as_user': True,
-            'mrkdwn': True,
-            'text': text
-        }
+            "text": message
+            }
         r = requests.post(url='https://slack.com/api/chat.postMessage', data=data).json()
         return r
 
 
 if __name__ == '__main__':
-    settings = Settings()
-    page_blog = Page('https://habr.com/ru/company/skillfactory/blog/')
-    if page_blog.get_page() is not None:
-        parser = Parser(page_blog.response)
-        articles = parser.get_articles()
-        now = datetime.now()
-        text = settings.settings['text'] + '\n'
-        workspace = Slack(settings.settings['token'])
-        my_id = workspace.get_id_my_channel(settings.settings['channel'])
-        for article in articles:
-            if article.publication_time > datetime(now.year, now.month, now.day - settings.settings['freq']):
-                text += f'• <{article.url}|{article.name}>\n'
-        print(workspace.write_to_channel(my_id, text))
-
-
+    program = Slack()
+    program.write_to_channel()
