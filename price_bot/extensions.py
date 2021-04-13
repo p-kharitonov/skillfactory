@@ -11,7 +11,6 @@ class Converter:
     @staticmethod
     def get_price(quote: str, base: str, amount: str):
         symbols = Converter.get_symbols()
-
         if quote in keys:
             quote = keys[quote]
         if base in keys:
@@ -42,3 +41,8 @@ class Converter:
             raise Exception(f'Не удалось получить даннные валют!')
         symbols = json.loads(r.content)['symbols']
         return symbols
+
+    @staticmethod
+    def get_text_help():
+        return 'Введи две валюты и количество, например:\n*USD EUR 10*\n\
+    Чтобы увидеть весь список доступных валют набери команду: /values'
