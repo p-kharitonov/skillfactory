@@ -1,6 +1,6 @@
-TOKEN = '' # Токен Telegram
+TOKEN = ''  # Токен Telegram
 
-TOKEN_CURRENCY = '' # Токен exchangeratesapi.io
+TOKEN_CURRENCY = ''  # Токен exchangeratesapi.io
 
 keys = {
     'биткоин': 'BTC',
