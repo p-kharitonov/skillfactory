@@ -96,4 +96,4 @@ def get_page_symbols(page=0, max_symbols=22):
     return [text, keyboard]
 
 
-bot.polling()
+bot.polling(none_stop=True, interval=0)
