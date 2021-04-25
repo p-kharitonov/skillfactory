@@ -1,0 +1,55 @@
+from news.models import *
+user1 = User.objects.create_user('Pavel','','pavel')
+user2 = User.objects.create_user('Ignat','','ignat2010')
+user3 = User.objects.create_user('Svetlana','','password')
+author1 = Author.objects.create(user=user1)
+author2 = Author.objects.create(user=user2)
+author3 = Author.objects.create(user=user3)
+category1 = Category.objects.create(category='Программирование')
+category2 = Category.objects.create(category='Живопись')
+category3 = Category.objects.create(category='Спорт')
+category4 = Category.objects.create(category='Культура')
+
+post1 = Post.objects.create(author=author1, type_post='AR', title='Культурный спорт', content='Тут текст про культуру и спорт, '*10)
+post1.category.add(category3,category4)
+
+post2 = Post.objects.create(author=author1, type_post='AR', title='Как научить ИИ писать картины?', content='научить ИИ писать картины нужно '*120)
+post2.category.add(category1,category2)
+
+post3 = Post.objects.create(author=author2, type_post='NS', title='Свежий рейтинг культурных программистов', content='011001100010100110'*50)
+post3.category.add(category1,category4)
+
+comment1 = Comment.objects.create(post=post1, user=user3, content='LOL')
+comment2 = Comment.objects.create(post=post1, user=user2, content=':)')
+
+comment3 = Comment.objects.create(post=post2, user=user1, content=':D')
+
+comment4 = Comment.objects.create(post=post3, user=user1, content='???')
+
+post1.like()
+post1.like()
+comment1.like()
+comment2.like()
+comment3.like()
+comment1.like()
+
+post3.dislike()
+post3.dislike()
+post3.dislike()
+comment4.dislike()
+post3.dislike()
+post2.dislike()
+
+author1.update_rating()
+author2.update_rating()
+author3.update_rating()
+
+best_author = Author.objects.all().order_by('-rating')[0]
+best_author
+
+best_post = Post.objects.all().order_by('-rating')[0]
+Post.objects.filter(id=best_post.id).values('created_at', 'author', 'rating', 'title')
+
+best_post.preview()
+
+Comment.objects.filter(post=best_post).values('created_at', 'user', 'rating', 'content')
