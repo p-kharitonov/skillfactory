@@ -1,0 +1,18 @@
+
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+{{post.title}}
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">{{ post.title|censor }}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Создано: {{ post.created_at|date:'d-M-Y H:m'  }}</h6>
+    <p class="card-text text-left">{{ post.content|censor}}</p>
+  </div>
+</div>
+{% endblock content %}
