@@ -8,6 +8,11 @@
 {% endblock title %}
 
 {% block content %}
+<h2>Вы действительно хотите удалить статью?</h2>
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="подтвердить">
+</form>
 <div class="card">
   <div class="card-body">
     <h5 class="card-title">{{ post.title|censor }}</h5>

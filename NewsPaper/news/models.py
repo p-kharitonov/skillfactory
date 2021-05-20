@@ -15,9 +15,16 @@ class Author(models.Model):
         self.save()
         return self.rating
 
+    def __str__(self):
+        return f'{self.user}'
+
 
 class Category(models.Model):
     category = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return f'{self.category}'
+
 
 
 class Post(models.Model):
@@ -49,7 +56,10 @@ class Post(models.Model):
             return ''.join((self.content[:124], '...'))
 
     def __str__(self):
-        return f'{self.title}: {self.preview()}'
+        return f'{self.title}'
+
+    def get_absolute_url(self):  # добавим абсолютный путь чтобы после создания нас перебрасывало на страницу с товаром
+        return f'/news/{self.id}'
 
 
 class PostCategory(models.Model):
