@@ -1,4 +1,5 @@
 # from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView,  DeleteView # импортируем класс получения деталей объекта
 from .models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -8,7 +9,7 @@ from .forms import PostForm
 
 class PostList(ListView):
     model = Post
-    template_name = 'posts.html'
+    template_name = 'news/posts.html'
     context_object_name = 'posts'
     ordering = ['-created_at']
     paginate_by = 10
@@ -16,7 +17,7 @@ class PostList(ListView):
 
 class PostSearch(ListView):
     model = Post
-    template_name = 'search.html'
+    template_name = 'news/search.html'
     context_object_name = 'posts'
     ordering = ['-created_at']
     paginate_by = 2
@@ -37,8 +38,8 @@ class PostSearch(ListView):
         return context
 
 
-class PostUpdate(UpdateView):
-    template_name = 'create.html'
+class PostUpdate(LoginRequiredMixin,UpdateView):
+    template_name = 'news/create.html'
     form_class = PostForm
 
     def get_object(self, **kwargs):
@@ -47,17 +48,17 @@ class PostUpdate(UpdateView):
 
 
 class PostCreate(CreateView):
-    template_name = 'create.html'
+    template_name = 'news/create.html'
     form_class = PostForm
 
 
 class PostDelete(DeleteView):
-    template_name = 'delete.html'
+    template_name = 'news/delete.html'
     queryset = Post.objects.all()
     success_url = '/news/'
 
 
 class PostDetail(DetailView):
     model = Post  # модель всё та же, но мы хотим получать детали конкретно отдельного товара
-    template_name = 'post.html'  # название шаблона будет product.html
+    template_name = 'news/post.html'  # название шаблона будет product.html
     context_object_name = 'post'  # название объекта. в нём будет

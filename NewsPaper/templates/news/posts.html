@@ -11,30 +11,25 @@
 {% block content %}
 <h1>Все статьи ({{ posts|length }})</h1>
   {% if posts %}
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Заголовок</th>
-      <th scope="col">Текст</th>
-      <th scope="col">Автор</th>
-      <th scope="col">Дата</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for post in posts %}
-     <tr class="text-left">
-      <th scope="row"><a href="{{ post.pk }}">{{ post.title|censor }}</a></th>
-      <td><a href="{{ post.pk }}">{{ post.content|censor|truncatechars:50 }}</a></td>
-      <td>{{ post.author }}</td>
-      <td>{{ post.created_at|date:'d-M-Y H:i'  }}</td>
-      <td><a href="{% url 'post_edit' post.id %}"><u>Редактировать</u></a><br><a href="{% url 'post_delete' post.id %}"><u> Удалить </u></a></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="card-group text-left">
+  {% for post in posts %}
+  <div class="col-12 col-md-6 col-lg-4 col-xl-3 p-2">
+    <div class="card h-100" >
+      <img src="/media/photo.jpg" class="card-img-top" alt="{{ post.title|censor }}">
+      <div class="card-body">
+        <h5 class="card-title"><a href="{{ post.pk }}">{{ post.title|censor }}</a></h5>
+        <p class="card-text">{{ post.content|censor|truncatechars:50 }}</p>
+        <p class="card-text"><small class="text-muted">Автор: {{ post.author }}</small></p>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">Добавлено: {{ post.created_at|date:'d-M-Y H:i'  }}</small>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
   {% else %}
-        <h2>Пока ещё нет ни одной статьи!</h2>
+    <h2>Пока ещё нет ни одной статьи!</h2>
   {% endif %}
 {% if is_paginated %}
 
