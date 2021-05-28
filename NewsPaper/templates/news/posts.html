@@ -9,6 +9,9 @@
 
 
 {% block content %}
+{% if is_not_authors %}
+<button> <a href="/news/upgrade/">Стать автором.</a> </button>
+{% endif %}
 <h1>Все статьи ({{ posts|length }})</h1>
   {% if posts %}
 <div class="card-group text-left">
