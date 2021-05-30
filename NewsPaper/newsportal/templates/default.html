@@ -1,0 +1,70 @@
+{% load static %}
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <!-- Обязательные метатеги -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+      <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <title>News Portal — {% block title %} {% endblock title %}</title>
+    {% block style %}
+    {% endblock style %}
+  </head>
+  <body>
+  <header class="p-3 bg-dark text-white">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="navbar-brand d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          News Portal
+        </a>
+        {% with request.resolver_match.url_name as url_name %}
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="{% url 'home' %}" class="nav-link px-2 {% if url_name == 'home' %}text-white{% else %}text-secondary{% endif %}">Главная</a></li>
+          <li><a href="{% url 'news' %}" class="nav-link px-2 {% if url_name == 'news' %}text-white{% else %}text-secondary{% endif %}">Новости</a></li>
+          <li><a href="{% url 'post_search' %}" class="nav-link px-2 {% if url_name == 'post_search' %}text-white{% else %}text-secondary{% endif %}">Поиск</a></li>
+          <li><a href="{% url 'post_add' %}" class="nav-link px-2 {% if url_name == 'post_add' %}text-white{% else %}text-secondary{% endif %}">Добавить новость</a></li>
+        </ul>
+        {% endwith %}
+        {% if request.user.is_authenticated %}
+          {% if is_not_author %}
+          <div class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+            <a href="{% url 'upgrade' %}" class="btn btn-light btn-outline-primary">Стать автором</a>
+          </div>
+          {% endif %}
+        <div class="text-end">
+          <a class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ request.user.username }}</a>
+          <ul class="dropdown-menu">
+            {% if user.is_superuser %}
+            <li><a class="dropdown-item" href="/admin">Панель администратора</a></li>
+            {% endif %}
+            <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Сменить пароль</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Выйти</a></li>
+          </ul>
+        </div>
+          {% else %}
+        <div class="text-end">
+          <a href="{% url 'account_login' %}" class="btn btn-outline-light me-2">Авторизация</a>
+          <a href="{% url 'account_signup' %}" class="btn btn-warning">Регистрация</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+  <main class="container" style="margin-bottom: 70px;">
+    {% block content %}
+    {% endblock content %}
+  </main>
+
+  <footer class="bg-light fixed-bottom">
+    <div class="text-center py-3">© 2021 Copyright.
+      <span>Kharitonov Pavel</span>
+    </div>
+  </footer>
+
+<!--    <script src="{% static 'jquery/jquery.slim.min.js' %}"></script>-->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+{% extends 'default.html' %}
+
+{% load custom_tags %}
+
+{% block title %}
+Запрос отклонен. Ошибка 403
+{% endblock title %}
+
+{% block content %}
+<div class="alert alert-danger mt-2 text-center" role="alert">
+  <h1>Запрос отклонен. Ошибка 403</h1>
+  <p>У Вас нет разрешения для доступа на эту страницу!</p>
+</div>
+{% endblock content %}

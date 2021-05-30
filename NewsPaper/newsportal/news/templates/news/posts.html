@@ -1,0 +1,42 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Все новости
+{% endblock title %}
+
+{% block style %}
+<style>
+   .card {
+    transition: .1s; /* Время эффекта */
+   }
+   .card:hover {
+    transform: scale(1.008);
+    box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   }
+</style>
+{% endblock style %}
+
+{% block content %}
+<h1 class="text-center">Все статьи ({{ count_post }})</h1>
+  {% if posts %}
+<div class="card-group text-left">
+  {% for post in posts %}
+
+  {% block card %}
+    {% include 'news/inc/_card.html' %}
+  {% endblock card%}
+
+  {% endfor %}
+</div>
+  {% else %}
+    <div class="alert alert-primary" role="alert">
+      Пока еще нет ни одной новости
+    </div>
+  {% endif %}
+
+{% if is_paginated %}
+  {% block pagination %}
+    {% include 'news/inc/_pagination.html' %}
+  {% endblock pagination %}
+{% endif %}
+{% endblock content %}
