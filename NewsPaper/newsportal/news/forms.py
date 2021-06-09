@@ -11,7 +11,7 @@ class PostForm(ModelForm):
 
     class Meta:
         model = Post
-        fields = [ 'title', 'content', 'category', 'type_post', 'check_box']
+        fields = ['title', 'content', 'category', 'type_post', 'check_box']
         widgets = {
             'title': TextInput(attrs={'class': 'form-control mb-1', 'placeholder': 'Заголовок'}),
             'content': Textarea(attrs={'class': 'form-control mb-1', 'placeholder': 'Введите текст'}),

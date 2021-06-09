@@ -1,0 +1,24 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Все категории
+{% endblock title %}
+
+{% block content %}
+<h1 class="text-center">Все категории</h1>
+  {% if categories %}
+<div class="card-group text-left">
+  <ul class="list-group">
+  {% for category in categories %}
+    <li class="list-group-item list-group-item-action">
+      <a href="{% url 'categories_list' %}{{category.id}}">{{ category.category }}</a>
+    </li>
+  {% endfor %}
+  </ul>
+</div>
+  {% else %}
+    <div class="alert alert-primary" role="alert">
+      Пока еще нет ни одной категории
+    </div>
+  {% endif %}
+{% endblock content %}

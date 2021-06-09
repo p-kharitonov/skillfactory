@@ -8,7 +8,11 @@
 
 {% block content %}
 <div class="alert alert-danger mt-2 text-center" role="alert">
+  {% if exception %}
+  <h1>{{ exception }}</h1>
+  {% else %}
   <h1>Запрос отклонен. Ошибка 403</h1>
   <p>У Вас нет разрешения для доступа на эту страницу!</p>
+  {% endif %}
 </div>
 {% endblock content %}

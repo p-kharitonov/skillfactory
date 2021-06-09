@@ -1,5 +1,6 @@
 {% load static %}
-
+{% load custom_tags %}
+{% is_not_author as is_not_author %}
 <!doctype html>
 <html lang="ru">
   <head>
@@ -23,8 +24,11 @@
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="{% url 'home' %}" class="nav-link px-2 {% if url_name == 'home' %}text-white{% else %}text-secondary{% endif %}">Главная</a></li>
           <li><a href="{% url 'news' %}" class="nav-link px-2 {% if url_name == 'news' %}text-white{% else %}text-secondary{% endif %}">Новости</a></li>
+          <li><a href="{% url 'categories_list' %}" class="nav-link px-2 {% if url_name == 'categories_list' %}text-white{% else %}text-secondary{% endif %}">Категории</a></li>
           <li><a href="{% url 'post_search' %}" class="nav-link px-2 {% if url_name == 'post_search' %}text-white{% else %}text-secondary{% endif %}">Поиск</a></li>
+          {% if not is_not_author %}
           <li><a href="{% url 'post_add' %}" class="nav-link px-2 {% if url_name == 'post_add' %}text-white{% else %}text-secondary{% endif %}">Добавить новость</a></li>
+          {% endif %}
         </ul>
         {% endwith %}
         {% if request.user.is_authenticated %}
@@ -63,6 +67,6 @@
       <span>Kharitonov Pavel</span>
     </div>
   </footer>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
   </body>
 </html>

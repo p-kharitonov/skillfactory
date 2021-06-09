@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% load account %} <!-- Загружаем тег который позволит получить нам ссылку на подтверждение -->
+    <h1>Спасибо за регистрацию,{{ user.username }}!</h1>
+    <h3>Пожалуйста перейдите по <a href="{{ activate_url }}">ссылке</a> для активации аккаунта.</h3>
+     <!-- Вставляем ссылку на активацию -->
+    <small>Ссылка дейстительна 3 дня.</small>
+</body>
+</html>

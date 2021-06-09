@@ -14,11 +14,11 @@ class PostCategoryInline(admin.TabularInline):
     extra = 1
 
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     inlines = (PostCategoryInline,)
     list_display = ('id', 'author', 'type_post', 'title', 'get_content', 'created_at', 'rating')
     list_display_links = ('id', 'title', 'get_content',)
-    ordering = ('id',)
     fields = ('author', 'type_post', 'title', 'content', 'rating')
 
     def get_content(self, obj):
@@ -26,6 +26,7 @@ class PostAdmin(admin.ModelAdmin):
     get_content.short_description = 'Текст'
 
 
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'get_content', 'created_at', 'rating')
     list_display_links = ('id', 'get_content',)
@@ -37,5 +38,3 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Category)
-admin.site.register(Post, PostAdmin)
-admin.site.register(Comment, CommentAdmin)
