@@ -1,0 +1,15 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Добавить новость
+{% endblock title %}
+
+{% block content %}
+<h1>Добавить новость</h1>
+    {% block form_post %}
+         {% include 'news/inc/_post_add_update_form.html' %}
+    {% endblock form_post %}
+{% endblock content %}
+
+
+

@@ -1,0 +1,24 @@
+{% extends 'default.html' %}
+
+{% load custom_tags %}
+
+{% block title %}
+{{post.title}}
+{% endblock title %}
+
+{% block content %}
+<div class="alert alert-danger mt-2" role="alert">
+  Вы действительно хотите удалить новость?
+  <form method="POST" class="d-inline-block ms-1">
+    {% csrf_token %}
+    <input type="submit" value="ДА!" class="btn btn-danger">
+    <a href="{% url 'post' post.id %}" class="btn btn-secondary">НЕТ!</a>
+</form>
+</div>
+
+<hr>
+<h2 class="text-center mt-2">{{ post.title|censor }}</h2>
+<h6 class="text-center">Создано: {{ post.created_at|date:'d-M-Y H:i'  }}</h6>
+<h6 class="text-center"><small class="text-muted">Автор: {{ post.author }}</small></h6>
+<p><img src="/media/photo.jpg" class="me-2 mb-2 mt-2" alt="{{ post.title|censor }}" style="max-width:250px;float:left;">{{ post.content|censor}}</p>
+{% endblock content %}

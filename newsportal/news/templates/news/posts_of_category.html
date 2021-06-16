@@ -1,0 +1,48 @@
+{% extends 'default.html' %}
+
+{% block title %}
+Все новости {% if category %}в категории {{ category }}{% endif %}
+{% endblock title %}
+
+{% block style %}
+<style>
+   .card {
+    transition: .1s; /* Время эффекта */
+   }
+   .card:hover {
+    transform: scale(1.008);
+    box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+   }
+</style>
+{% endblock style %}
+
+{% block content %}
+<h1 class="text-center">Все статьи в категории {{ category }} ({{ count_post }})</h1>
+<div class="text-center">
+  <form action="{% url 'subscribe' %}" method="POST">
+    {% csrf_token %}
+  <button type="submit" value="{{ pk }}" name="pk" class="btn btn-light btn-outline-primary">{% if is_not_subscriber %}Подписаться!{% else %}Отписаться!{% endif %}</button>
+  </form>
+</div>
+{% if posts %}
+<div class="card-group text-left">
+  {% for post in posts %}
+
+  {% block card %}
+    {% include 'news/inc/_card.html' %}
+  {% endblock card%}
+
+  {% endfor %}
+</div>
+  {% else %}
+    <div class="alert alert-primary" role="alert">
+      Пока еще нет ни одной новости в категории {{ category }}
+    </div>
+  {% endif %}
+
+{% if is_paginated %}
+  {% block pagination %}
+    {% include 'news/inc/_pagination.html' %}
+  {% endblock pagination %}
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,17 @@
+{% extends 'default.html' %}
+
+{% load custom_tags %}
+
+{% block title %}
+{{post.title}}
+{% endblock title %}
+
+{% block content %}
+  <h2 class="text-center mt-2">{{ post.title|censor }}</h2>
+  <h6 class="text-center">Создано: {{ post.created_at|date:'d-M-Y H:i'  }}</h6>
+  <h6 class="text-center"><small class="text-muted">Автор: {{ post.author }}</small></h6>
+{% if post.author.user == request.user %}
+<div class="text-center"><a href="{% url 'post_edit' post.id %}" class="btn btn-warning me-2"><u>Редактировать</u></a><a href="{% url 'post_delete' post.id %}" class="btn btn-danger"><u>Удалить</u></a></div>
+{% endif %}
+  <p><img src="/media/photo.jpg" class="me-2 mb-2 mt-2" alt="{{ post.title|censor }}" style="max-width:250px;float:left;">{{ post.content|censor}}</p>
+{% endblock content %}

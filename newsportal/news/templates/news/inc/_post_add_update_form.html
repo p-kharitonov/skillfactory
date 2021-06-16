@@ -1,0 +1,25 @@
+<form method="POST">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-12">
+            {{ form.title.label_tag }}
+            {{ form.title }}
+        </div>
+
+        <div class="col-md-12">
+            {{ form.content.label_tag }}
+            {{ form.content }}
+        </div>
+        <div class="col-md-6">
+            {{ form.type_post.label_tag }}
+            {{ form.type_post }}
+        </div>
+        <div class="col-md-6">
+            {{ form.category.label_tag }}
+            {{ form.category }}
+        </div>
+    </div>
+    {{ form.check_box.label_tag }}
+    {{ form.check_box }} <br>
+    <input type="submit" value="Добавить">
+</form>
